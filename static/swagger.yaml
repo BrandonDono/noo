@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: API de Usuarios
+  description: API para gestionar usuarios con Flask.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Servidor local
+
+paths:
+  /users/:
+    get:
+      summary: Obtener todos los usuarios
+      responses:
+        "200":
+          description: "La solicitud se procesó correctamente y se devuelve la lista de usuarios."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+        "400":
+          description: "La solicitud enviada por el cliente es incorrecta o contiene errores en los parámetros."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "Ocurrió un problema inesperado en el servidor al obtener la lista de usuarios."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    post:
+      summary: Crear un usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "El usuario fue creado exitosamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Usuario creado exitosamente."
+        "400":
+          description: "Los datos proporcionados en la solicitud son inválidos o incompletos."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "Ocurrió un error en el servidor al intentar crear el usuario."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /users/{id}:
+    put:
+      summary: Actualizar un usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            description: "ID único del usuario."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: "El usuario fue actualizado exitosamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Usuario actualizado exitosamente."
+        "400":
+          description: "Los datos proporcionados en la solicitud son inválidos o incompletos."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: "El usuario con el ID especificado no fue encontrado en la base de datos."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "Ocurrió un problema inesperado en el servidor al actualizar el usuario."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Eliminar un usuario
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            description: "ID único del usuario."
+      responses:
+        "200":
+          description: "El usuario fue eliminado exitosamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Usuario eliminado exitosamente."
+        "400":
+          description: "El ID proporcionado no es válido o la solicitud contiene errores."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: "No se encontró el usuario con el ID especificado."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: "Ocurrió un problema inesperado en el servidor al intentar eliminar el usuario."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  schemas:
+    User:
+      type: object
+      description: "Datos de un usuario."
+      properties:
+        id:
+          type: integer
+          description: "ID único del usuario."
+          example: 1
+        name:
+          type: string
+          description: "Nombre del usuario."
+          example: "Juan Pérez"
+        email:
+          type: string
+          description: "Correo electrónico del usuario."
+          example: "juan.perez@example.com"
+    ErrorResponse:
+      type: object
+      description: "Respuesta estándar para errores en la API."
+      properties:
+        status:
+          type: string
+          example: "error"
+        message:
+          type: string
+          example: "Descripción del error específico."

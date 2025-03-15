@@ -1,0 +1,13 @@
+database:
+  dialect: "mysql"
+  driver: "pymysql"
+  username: "root"
+  password: ""
+  host: "localhost"  # Cambia esto si tienes una IP diferente
+  port: 3306
+  name: "usuarios_v"
+
+flask:
+  debug: true
+  port: 5000
+  cors_enabled: true
